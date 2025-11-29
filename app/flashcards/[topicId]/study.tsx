@@ -85,14 +85,14 @@ export default function StudyScreen() {
   };
 
   const handleToggle = () => {
-    setRevealed((value) => {
-      const next = !value;
-      if (!value && next) {
-        setLastStudyAt(new Date().toISOString());
-      }
-      return next;
-    });
+    setRevealed((value) => !value);
   };
+
+  useEffect(() => {
+    if (revealed) {
+      setLastStudyAt(new Date().toISOString());
+    }
+  }, [revealed, setLastStudyAt]);
 
   const currentCard = deck[currentIndex];
 

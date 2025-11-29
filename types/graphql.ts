@@ -13,6 +13,11 @@ export interface Flashcard {
   answer: string;
   createdAt?: string | null;
   updatedAt?: string | null;
+  topic?: {
+    id: string;
+    name?: string | null;
+    description?: string | null;
+  } | null;
 }
 
 export interface CreateTopicInput {

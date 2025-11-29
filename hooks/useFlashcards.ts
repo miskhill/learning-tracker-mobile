@@ -10,6 +10,23 @@ interface CreateFlashcardResult {
   offline: boolean;
 }
 
+type FlashcardFromServer = Omit<Flashcard, 'topicId'> & {
+  topic?: { id: string | null } | null;
+};
+
+function normalizeFlashcards(
+  cards: ReadonlyArray<FlashcardFromServer>,
+  fallbackTopicId: string
+): Flashcard[] {
+  return cards.map((card) => {
+    const { topic, ...rest } = card;
+    return {
+      ...rest,
+      topicId: topic?.id ?? fallbackTopicId
+    };
+  });
+}
+
 export function useFlashcards(topicId: string | string[] | undefined) {
   const parsedTopicId = Array.isArray(topicId) ? topicId[0] : topicId;
   const flashcards = useFlashcardStore((state) =>
@@ -22,8 +39,9 @@ export function useFlashcards(topicId: string | string[] | undefined) {
     variables: { topicId: parsedTopicId ?? '' },
     skip: !parsedTopicId,
     onCompleted: (result) => {
-      if (parsedTopicId && result?.flashcards) {
-        setFlashcards(parsedTopicId, result.flashcards);
+      if (parsedTopicId && result?.flashcardsByTopic) {
+        const normalized = normalizeFlashcards(result.flashcardsByTopic, parsedTopicId);
+        setFlashcards(parsedTopicId, normalized);
       }
     },
     onError: (error) => {
@@ -47,8 +65,9 @@ export function useFlashcards(topicId: string | string[] | undefined) {
 
       const created = result.data?.createFlashcard;
       if (created) {
+        const [normalized] = normalizeFlashcards([created], input.topicId);
         await refetch();
-        return { flashcard: created, offline: false };
+        return { flashcard: normalized, offline: false };
       }
 
       throw new Error('Failed to create flashcard');

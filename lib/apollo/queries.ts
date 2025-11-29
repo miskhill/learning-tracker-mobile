@@ -13,14 +13,16 @@ export const TOPICS_QUERY = gql`
 `;
 
 export const FLASHCARDS_BY_TOPIC_QUERY = gql`
-  query Flashcards($topicId: ID!) {
-    flashcards(topicId: $topicId) {
+  query FlashcardsByTopic($topicId: ID!) {
+    flashcardsByTopic(topicId: $topicId) {
       id
-      topicId
       question
       answer
       createdAt
       updatedAt
+      topic {
+        id
+      }
     }
   }
 `;
@@ -41,11 +43,13 @@ export const CREATE_FLASHCARD_MUTATION = gql`
   mutation CreateFlashcard($input: CreateFlashcardInput!) {
     createFlashcard(input: $input) {
       id
-      topicId
       question
       answer
       createdAt
       updatedAt
+      topic {
+        id
+      }
     }
   }
 `;

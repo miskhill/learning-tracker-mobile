@@ -4,6 +4,27 @@ import { CREATE_FLASHCARD_MUTATION, CREATE_TOPIC_MUTATION, FLASHCARDS_BY_TOPIC_Q
 import { loadFlashcardsFromCache, loadLastStudyAt, loadTopicsFromCache } from './offlineCache';
 import { useTopicStore } from '@/store/topicStore';
 import { useFlashcardStore } from '@/store/flashcardStore';
+import type { Flashcard } from '@/types/graphql';
+
+type FlashcardFromServer = Omit<Flashcard, 'topicId'> & {
+  topic?: { id: string | null } | null;
+};
+
+const normalizeFlashcard = (
+  card: FlashcardFromServer,
+  fallbackTopicId: string
+): Flashcard => {
+  const { topic, ...rest } = card;
+  return {
+    ...rest,
+    topicId: topic?.id ?? fallbackTopicId
+  };
+};
+
+const normalizeFlashcards = (
+  cards: ReadonlyArray<FlashcardFromServer>,
+  fallbackTopicId: string
+): Flashcard[] => cards.map((card) => normalizeFlashcard(card, fallbackTopicId));
 
 export async function hydrateStoresFromCache(): Promise<void> {
   const [topics, flashcardsByTopic, lastStudyAt] = await Promise.all([
@@ -74,9 +95,10 @@ export async function syncOfflineData(
         }
       });
 
-      const createdFlashcard = data?.createFlashcard;
+      const createdFlashcard = data?.createFlashcard as FlashcardFromServer | undefined;
       if (createdFlashcard) {
-        flashcardStore.markFlashcardSynced(pending.topicId, pending.flashcard.id, createdFlashcard);
+        const normalized = normalizeFlashcard(createdFlashcard, pending.topicId);
+        flashcardStore.markFlashcardSynced(pending.topicId, pending.flashcard.id, normalized);
       }
     } catch (error) {
       console.warn('Failed to sync flashcard', pending.flashcard.id, error);
@@ -103,9 +125,9 @@ export async function syncOfflineData(
         variables: { topicId: topic.id },
         fetchPolicy: 'network-only'
       });
-      if (data?.flashcards) {
-        flashcardStore.setFlashcards(topic.id, data.flashcards);
-      }
+      const rawCards = (data?.flashcardsByTopic ?? []) as FlashcardFromServer[];
+      const normalized = normalizeFlashcards(rawCards, topic.id);
+      flashcardStore.setFlashcards(topic.id, normalized);
     } catch (error) {
       console.warn('Failed to refresh flashcards for topic', topic.id, error);
     }
