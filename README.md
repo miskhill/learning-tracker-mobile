@@ -5,6 +5,7 @@ Learning Tracker is a mobile-first companion for engineers and lifelong learners
 ## Why It Matters
 
 - Showcase of a modern Expo + React Native codebase that balances DX with production-ready concerns (offline-first data, background sync, notifications).
+- Build on my Pushover/Twilio backend app.
 - Demonstrates integration with GraphQL backends, state synchronization across network boundaries, and clean UI patterns suitable for rapid iteration.
 
 ## Product Highlights
@@ -31,12 +32,13 @@ Learning Tracker is a mobile-first companion for engineers and lifelong learners
 - **Network awareness** – Sync routines subscribe to NetInfo changes to opportunistically push offline work and refresh remote queries.
 - **Reminder scheduling** – Daily notifications cancel and reschedule to prevent duplicate alerts and keep messaging relevant.
 
-## Roadmap Ideas
+## Roadmap Ideas - future planning
 
 - Streak tracking and leaderboard widgets to gamify consistency.
 - Adaptive quiz mode that prioritizes cards answered incorrectly.
 - Server-driven content recommendations based on learning history.
 - E2E automation covering offline workflows and sync edge cases.
+- Dockerise the app for local development.
 
 ## Connect
 
