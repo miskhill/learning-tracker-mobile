@@ -39,7 +39,8 @@ Learning Tracker is a mobile-first companion for engineers and lifelong learners
 - Server-driven content recommendations based on learning history.
 - E2E automation covering offline workflows and sync edge cases.
 - Dockerise the app for local development.
+- Can we find free hosting besides render
 
 ## Connect
 
-I’m always open to discussing developmentopportunities or collaboration. Reach out on [LinkedIn](https://www.linkedin.com/in/gary-smith-dev/).
+I’m always open to discussing development opportunities or collaboration. Reach out on [LinkedIn](https://www.linkedin.com/in/gary-smith-dev/).
