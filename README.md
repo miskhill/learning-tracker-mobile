@@ -5,7 +5,7 @@ Learning Tracker is a mobile-first companion for engineers and lifelong learners
 ## Why It Matters
 
 - Showcase of a modern Expo + React Native codebase that balances DX with production-ready concerns (offline-first data, background sync, notifications).
-- Build on my Pushover/Twilio backend app.
+- Build to extend my Pushover/Twilio backend app.
 - Demonstrates integration with GraphQL backends, state synchronization across network boundaries, and clean UI patterns suitable for rapid iteration.
 
 ## Product Highlights
